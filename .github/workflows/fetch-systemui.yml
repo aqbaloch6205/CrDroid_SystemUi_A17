@@ -1,0 +1,38 @@
+name: Fetch SystemUI
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout my repo
+        uses: actions/checkout@v4
+
+      - name: Checkout crDroid SystemUI only
+        uses: actions/checkout@v4
+        with:
+          repository: crdroidandroid/android_frameworks_base
+          ref: 17.0
+          path: _src
+          sparse-checkout: packages/SystemUI
+          fetch-depth: 1
+
+      - name: Copy SystemUI into my repo
+        run: |
+          rm -rf SystemUI
+          mkdir -p SystemUI
+          cp -a _src/packages/SystemUI/. SystemUI/
+          rm -rf _src
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add SystemUI
+          git diff --cached --quiet || git commit -m "Add SystemUI from crDroid 17.0"
+          git push
