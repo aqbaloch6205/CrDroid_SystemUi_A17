@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: crdroidandroid/android_frameworks_base
-          ref: 17.0
+          ref: "17.0"
           path: _src
           sparse-checkout: packages/SystemUI
           fetch-depth: 1
